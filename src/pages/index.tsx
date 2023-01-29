@@ -1,96 +1,13 @@
 import React from 'react';
-
 import styles from "@/styles/Home.module.css";
+import Chessboard from './components/Chessboard';
+import MessageBox from './components/MessagessBox/MessageBox';
 const Home: React.FunctionComponent = () => {
   return (
-    <div className={styles.chessboardContainer}>
-    <div className={styles.chessboard}>
-  
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
- 
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareWhite} />
-
-  <div className={styles.squareBlack} />
- <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareBlack} />
-
-
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-
-  
-
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
- 
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-
-<div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-
-
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-  <div className={styles.squareBlack} />
-  <div className={styles.squareWhite} />
-
-
-
-
-
-
-    </div>
-</div>
+   <>
+   <Chessboard />
+   <MessageBox />
+   </>
   );
 };
 
