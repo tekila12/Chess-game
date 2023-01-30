@@ -1,10 +1,10 @@
 import React from 'react';
 
-import styles from "@/styles/Home.module.css";
+
 const MessageBox: React.FunctionComponent = () => {
   return (
     <div>
-        <input className={styles.messageInput}/>
+        <input  />
 </div>
   );
 };
