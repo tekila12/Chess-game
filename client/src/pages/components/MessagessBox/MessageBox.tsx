@@ -1,26 +1,34 @@
 import React, { useState } from 'react';
-import { io } from 'socket.io-client';
+import socketIOClient from 'socket.io-client';
 
+interface RoomData {
+  post: string;
+}
 
 const MessageBox: React.FunctionComponent = () => {
-  
-  const socket = io("http://localhost:5000", {transports:['websocket']})
-  const [name, setName] = useState("")
-  const [list, setList] = useState([])
 
+  const socket = socketIOClient("http://localhost:8080", { 
+  withCredentials: true,});
+  const [name, setName] = useState("");
+  const [list, setList] = useState<RoomData[]>([]);
 
-  const handlePost= () =>{
-    socket.emit('room', {post:name})
-  }
+  const handlePost = () => {
+    socket.emit('room', { post: name });
+  };
 
-  socket.on("romms", (data)=>{
-    console.log(data)
-  })
+  socket.on("romms", (data: RoomData) => {
+    setList((prevList) => [...prevList, data]);
+    console.log(data);
+  });
+
   return (
     <div>
-        <input  type='text' onChange={(e)=> setName(e.target.value)}/>
+        <input type="text" onChange={(e) => setName(e.target.value)} />
         <button onClick={handlePost}>Send</button>
-</div>
+        {list.map((p) => (
+          <div key={p.post}><li>{p.post}</li></div>
+        ))}
+    </div>
   );
 };
 
