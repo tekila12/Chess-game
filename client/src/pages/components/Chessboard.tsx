@@ -4,7 +4,7 @@ Command: npx gltfjsx@6.1.4 chessBoard1.glb
 */
 
 import React, { useEffect, useRef } from 'react'
-import { useGLTF } from '@react-three/drei'
+import { useGLTF, useLoader } from '@react-three/drei'
 
 export function Model(props) {
   const { nodes, materials } = useGLTF('/chessBoard1.glb')
@@ -12,8 +12,11 @@ export function Model(props) {
 
   useEffect(()=>{
     animation.destruction.play()
+
   })
+
   return (
+    <
     <group {...props} dispose={null}>
       <group position={[0, 0.73, -0.01]}>
         <mesh geometry={nodes.Object_28.geometry} material={materials.black} />
