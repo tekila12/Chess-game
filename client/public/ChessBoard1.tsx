@@ -57,7 +57,7 @@ type GLTFResult = GLTF & {
   }
 }
 
-export default function Chessboard(props: JSX.IntrinsicElements['group']) {
+export function Model(props: JSX.IntrinsicElements['group']) {
   const { nodes, materials } = useGLTF('/chessBoard1.glb') as GLTFResult
   return (
     <group {...props} dispose={null}>
