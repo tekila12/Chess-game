@@ -18,7 +18,8 @@ const Home: React.FunctionComponent = () => {
   return (
     <div style={{ width: "100vw", height: "100vh", background: 'black' }}>
     <Canvas >
-<ambientLight intensity={0.25}/>
+<ambientLight intensity={1.25}/>
+<directionalLight />
       <Chessboard />
 
 <OrbitControls />
