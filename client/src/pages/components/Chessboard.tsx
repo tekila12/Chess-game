@@ -4,7 +4,7 @@ Command: npx gltfjsx@6.1.4 chessAnimation1.glb --types
 */
 
 import * as THREE from 'three'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
 
@@ -316,7 +316,9 @@ export function Model(props: JSX.IntrinsicElements['group']) {
   const { actions } = useAnimations<GLTFActions>(animations, group);
 
 
-  
+  useEffect(()=>{
+actions.defaultMaterial.014.play();
+  })
 
   return (
     <group ref={group} {...props} dispose={null}>
