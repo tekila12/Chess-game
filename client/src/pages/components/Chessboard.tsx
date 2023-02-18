@@ -111,6 +111,10 @@ export function Model(props: JSX.IntrinsicElements['group']) {
   const group = useRef<THREE.Group>()
   const { nodes, materials, animations } = useGLTF('/horseanimation.glb') as GLTFResult
   const { actions } = useAnimations<GLTFActions>(animations, group)
+
+  useEffect(()=>{
+    actions.Armature.001Action.play()
+  })
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Scene">
