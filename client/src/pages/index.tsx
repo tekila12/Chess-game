@@ -24,7 +24,7 @@ const Home: React.FunctionComponent = () => {
 
 <OrbitControls />
     </Canvas>
-
+<MessageBox />
       </div>
   );
 };
