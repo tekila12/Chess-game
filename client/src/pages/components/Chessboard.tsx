@@ -107,16 +107,18 @@ type ActionName =
   | 'Armature.001Action'
 type GLTFActions = Record<ActionName, THREE.AnimationAction>
 
-export function Model(props: JSX.IntrinsicElements['group']) {
+export default function Chessboard(props: JSX.IntrinsicElements['group']) {
   const group = useRef<THREE.Group>()
   const { nodes, materials, animations } = useGLTF('/horseanimation.glb') as GLTFResult
-  const { actions } = useAnimations<GLTFActions>(animations, group)
+  const { actions } = useAnimations(animations, group);
 
-  useEffect(()=>{
-    actions.Armature.001Action.play()
-  })
+  // useEffect(()=>{
+  //   actions.Armature.001Action.play()
+  // })
+
+
   return (
-    <group ref={group} {...props} dispose={null}>
+    <group  {...props} dispose={null}>
       <group name="Scene">
         <group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]}>
           <group name="Collada_visual_scene_group" rotation={[Math.PI / 2, 0, 0]}>

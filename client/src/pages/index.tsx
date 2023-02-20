@@ -21,9 +21,10 @@ const Home: React.FunctionComponent = () => {
 <ambientLight intensity={1.25}/>
 <directionalLight />
       <Chessboard />
-
 <OrbitControls />
     </Canvas>
+
+    
 <MessageBox />
       </div>
   );
