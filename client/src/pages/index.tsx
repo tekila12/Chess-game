@@ -16,17 +16,20 @@ import { OrbitControls } from '@react-three/drei';
 
 const Home: React.FunctionComponent = () => {
   return (
-    <div style={{ width: "100vw", height: "100vh", background: 'black' }}>
-    <Canvas >
-<ambientLight intensity={1.25}/>
-<directionalLight />
-      <Chessboard />
-<OrbitControls />
-    </Canvas>
+    <div style={{ width: "100vw", height: "90vh", background: 'black' }}>
+      <Canvas >
+        <ambientLight intensity={1.25} />
+        <directionalLight />
+        <Chessboard />
+        <OrbitControls />
+      </Canvas>
 
-    
-<MessageBox />
-      </div>
+
+  
+      <div style={{ width: "100vw", height: "100vh", background: 'black' }}>
+             <MessageBox /> 
+      </div> 
+         </div>
   );
 };
 

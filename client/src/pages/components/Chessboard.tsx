@@ -4,7 +4,7 @@ Command: npx gltfjsx@6.1.4 horseanimation.glb --types
 */
 
 import * as THREE from 'three'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
 
@@ -57,6 +57,11 @@ type GLTFResult = GLTF & {
     initialShadingGroup: THREE.MeshStandardMaterial
     blinn3SG: THREE.MeshStandardMaterial
   }
+  animations: GLTFAction[];
+}
+
+interface GLTFAction extends THREE.AnimationClip {
+  name: ActionName;
 }
 
 type ActionName =
@@ -112,8 +117,8 @@ export default function Chessboard(props: JSX.IntrinsicElements['group']) {
   const { nodes, materials, animations } = useGLTF('/horseanimation.glb') as GLTFResult
   const { actions } = useAnimations(animations, group);
 
-  // useEffect(()=>{
-  //   actions.Armature.001Action.play()
+  // // useEffect(()=>{
+  //   actions.Sketchfab_model.play()
   // })
 
 
