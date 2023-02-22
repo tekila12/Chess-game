@@ -23,7 +23,7 @@ const MessageBox: React.FunctionComponent = () => {
 
   return (
     <div>
-        <input type="text" onChange={(e) => setName(e.target.value)} />
+        <input style={{ width: "100vw", height: "10vh", background: 'grey'}} type="text" onChange={(e) => setName(e.target.value)} />
         <button onClick={handlePost}>Send</button>
         {list.map((p) => (
           <div key={p.post}><li>{p.post}</li></div>
