@@ -178,7 +178,7 @@ export default function ChessBoard(props: JSX.IntrinsicElements['group']) {
         actions.Action.play()
       }
       
-    }, 3000)
+    }, 5000)
     return () => clearTimeout(timer)
   }, [actions.Action])
 
