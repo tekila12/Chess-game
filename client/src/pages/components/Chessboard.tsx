@@ -175,12 +175,12 @@ export default function ChessBoard(props: JSX.IntrinsicElements['group']) {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (actions.Action) {
-        actions.Action.play()
+        actions.blendAnim.glb.play()
       }
       
     }, 5000)
     return () => clearTimeout(timer)
-  }, [actions.Action])
+  }, [actions.blendAnim.glb])
 
   return (
     <group ref={group} {...props} dispose={null}>
