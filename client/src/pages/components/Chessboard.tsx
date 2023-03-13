@@ -171,16 +171,7 @@ export default function ChessBoard(props: JSX.IntrinsicElements['group']) {
   const { nodes, materials, animations } = useGLTF('/blendAnim.glb') as GLTFResult
   const { actions } = useAnimations(animations, group)
 
-  console.log(useAnimations)
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (actions.Action) {
-        actions.blendAnim.glb.play()
-      }
-      
-    }, 5000)
-    return () => clearTimeout(timer)
-  }, [actions.blendAnim.glb])
+
 
   return (
     <group ref={group} {...props} dispose={null}>
