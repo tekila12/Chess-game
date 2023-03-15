@@ -69,7 +69,7 @@ const MessageBox: React.FC = () => {
   };
 
   return (
-    <div className="messageBox">
+    <div >
       <div >
         <h1>Realtime Chat App</h1>
         <h2 >in Next.js and Socket.io</h2>
