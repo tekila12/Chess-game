@@ -1,35 +1,119 @@
-import React, { useState } from 'react';
-import socketIOClient from 'socket.io-client';
+import io from "socket.io-client";
+import { useState, useEffect } from "react";
 
-interface RoomData {
-  post: string;
-}
+let socket:any
 
-const MessageBox: React.FunctionComponent = () => {
+type Message = {
+  author: string;
+  message: string;
+};
 
-  const socket = socketIOClient("http://localhost:8080", { 
-  withCredentials: true,});
-  const [name, setName] = useState("");
-  const [list, setList] = useState<RoomData[]>([]);
+export default function MessageBox() {
+  const [username, setUsername] = useState("");
+  const [chosenUsername, setChosenUsername] = useState("");
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<Array<Message>>([]);
 
-  const handlePost = () => {
-    socket.emit('room', { post: name });
+  useEffect(() => {
+    socketInitializer();
+  }, []);
+
+  const socketInitializer = async () => {
+    // We just call it because we don't need anything else out of it
+    await fetch("/api/socket");
+    socket = io();
+    socket.on("newIncomingMessage", (msg:any) => {
+      setMessages((currentMsg) => [
+        ...currentMsg,
+        { author: msg.author, message: msg.message },
+      ]);
+      console.log(messages);
+    });
   };
 
-  socket.on("romms", (data: RoomData) => {
-    setList((prevList) => [...prevList, data]);
-    console.log(data);
-  });
+  const sendMessage = async () => {
+    socket.emit("createdMessage", { author: chosenUsername, message });
+    setMessages((currentMsg) => [
+      ...currentMsg,
+      { author: chosenUsername, message },
+    ]);
+    setMessage("");
+  };
+
+  const handleKeypress = (e:any) => {
+    //it triggers by pressing the enter key
+    if (e.keyCode === 13) {
+      if (message) {
+        sendMessage();
+      }
+    }
+  };
 
   return (
     <div>
-        <input style={{ width: "100vw", height: "10vh", background: 'grey'}} type="text" onChange={(e) => setName(e.target.value)} />
-        <button onClick={handlePost}>Send</button>
-        {list.map((p) => (
-          <div key={p.post}><li>{p.post}</li></div>
-        ))}
+      <main>
+        {!chosenUsername ? (
+          <>
+            <h3>
+             
+            </h3>
+            <input
+              type="text"
+              placeholder="Identity..."
+              value={username}
+            
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <button
+              onClick={() => {
+                setChosenUsername(username);
+              }}
+              
+            >
+              Go!
+            </button>
+          </>
+        ) : (
+          <>
+            <p >
+              Your username: {username}
+            </p>
+            <div >
+              <div >
+                {messages.map((msg, i) => {
+                  return (
+                    <div                    
+                      key={i}
+                    >
+                      {msg.author} : {msg.message}
+                    </div>
+                  );
+                })}
+              </div>
+              <div >
+                <input
+                  type="text"
+                  placeholder="New message..."
+                  value={message}
+                 
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyUp={handleKeypress}
+                />
+                <div>
+                  <button
+                    
+                    onClick={() => {
+                      sendMessage();
+                    }}
+                  >
+                    Send
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </main>
     </div>
   );
-};
-
-export default MessageBox;
+}
