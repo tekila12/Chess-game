@@ -27,3 +27,8 @@
 .chessboard > div:nth-child(even) {
   background-color: #f0d9b5;
 }
+
+.messageBox{
+  background-color: grey;
+  height: 100%;
+}

@@ -50,7 +50,7 @@ export default function MessageBox() {
   };
 
   return (
-    <div>
+    <div className="messageBox">
       <main>
         {!chosenUsername ? (
           <>
