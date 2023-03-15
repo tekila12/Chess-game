@@ -131,7 +131,7 @@ export default function ChessBoard(props: JSX.IntrinsicElements['group']) {
 
 
   return (
-    <group ref={group} {...props} dispose={null}>
+    <group  {...props} dispose={null}>
       <group name="Scene">
         <group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]}>
           <group name="Collada_visual_scene_group" rotation={[Math.PI / 2, 0, 0]}>
