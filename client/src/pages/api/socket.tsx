@@ -1,8 +1,7 @@
-import { Server, } from "socket.io";
-import { Server as HttpServer } from "http";
+import { Server } from "socket.io";
 import messageHandler from "./messageHandler";
 
-export default function SocketHandler(req: any, res: { socket: { server: { io: any; }; }; end: () => void; }) {
+export default function SocketHandler(req:any, res:any) {
   // It means that socket server was already initialised
   if (res.socket.server.io) {
     console.log("Already set up");
@@ -10,15 +9,10 @@ export default function SocketHandler(req: any, res: { socket: { server: { io: a
     return;
   }
 
-  const server = new HttpServer();
-  const io = new Server(server, {
-    cors: {
-      origin: "*", // update this to match your needs
-      methods: ["GET", "POST"] // update this to match your needs
-    }
-  });
+  const io = new Server(res.socket.server);
+  res.socket.server.io = io;
 
-  const onConnection = (socket: any) => {
+  const onConnection = (socket:any) => {
     messageHandler(io, socket);
   };
 
