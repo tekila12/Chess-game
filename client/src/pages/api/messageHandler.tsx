@@ -1,7 +1,15 @@
-export default (io: any, socket: { broadcast: { emit: (arg0: string, arg1: any) => void; }; on: (arg0: string, arg1: (msg: any) => void) => void; }) => {
-    const createdMessage = (msg: any) => {
-      socket.broadcast.emit("newIncomingMessage", msg);
-    };
-  
-    socket.on("createdMessage", createdMessage);
-  };
+import { NextApiRequest } from "next";
+import { NextApiResponseServerIO } from "src/types/next";
+
+export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
+  if (req.method === "POST") {
+    // get message
+    const message = req.body;
+
+    // dispatch to channel "message"
+    res?.socket?.server?.io?.emit("message", message);
+
+    // return message
+    res.status(201).json(message);
+  }
+};
