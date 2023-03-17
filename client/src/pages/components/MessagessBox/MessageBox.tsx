@@ -31,6 +31,8 @@ const Index: React.FC = () => {
     } else {
       console.error('BASE_URL environment variable is not defined');
     }
+
+    console.log(process.env.BASE_URL);
     // log socket connection
     if (socket) {
       socket.on("connect", () => {
@@ -72,15 +74,13 @@ const Index: React.FC = () => {
       if (resp.ok) setMsg("");
     }
 
-    // focus after click
+  
     
   };
 
   return (
     <div className="messageBox" >
-      <div >
-        <h1 >Realtime Chat App</h1>
-        <h2 >in Next.js and Socket.io</h2>
+      <div >    
       </div>
       <div>
         <div >
