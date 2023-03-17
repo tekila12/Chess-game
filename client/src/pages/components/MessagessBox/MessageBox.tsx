@@ -20,27 +20,35 @@ const Index: React.FC = () => {
   // init chat and message
   const [chat, setChat] = useState<IMsg[]>([]);
   const [msg, setMsg] = useState<string>("");
-
-  useEffect((): any => {
+  useEffect(() => {
+    let socket:any;
     // connect to socket server
-    const socket = SocketIOClient(process.env.BASE_URL, {
-      path: '/api/socket',
-    });
-
+    if (process.env.BASE_URL) {
+      socket = SocketIOClient(process.env.BASE_URL, {
+        path: '/api/socket',
+      });
+      // ...
+    } else {
+      console.error('BASE_URL environment variable is not defined');
+    }
     // log socket connection
-    socket.on("connect", () => {
-      console.log("SOCKET CONNECTED!", socket.id);
-      setConnected(true);
-    });
-
-    // update chat on new message dispatched
-    socket.on("message", (message: IMsg) => {
-      chat.push(message);
-      setChat([...chat]);
-    });
-
-    // socket disconnet onUnmount if exists
-    if (socket) return () => socket.disconnect();
+    if (socket) {
+      socket.on("connect", () => {
+        console.log("SOCKET CONNECTED!", socket.id);
+        setConnected(true);
+      });
+  
+      // update chat on new message dispatched
+      socket.on("message", (message: IMsg) => {
+        chat.push(message);
+        setChat([...chat]);
+      });
+  
+      // socket disconnect on unmount
+      return () => {
+        socket.disconnect();
+      };
+    }
   }, []);
 
   const sendMessage = async () => {
