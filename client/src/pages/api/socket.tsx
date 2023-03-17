@@ -17,12 +17,23 @@ export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
     const io = new ServerIO(httpServer, {
       path: "/api/socket",
       cors: {
-        origin: "*",
+        origin: "*", // or specify your client's origin here
         methods: ["GET", "POST"]
       }
     });
     // append SocketIO server to Next.js socket server response
     res.socket.server.io = io;
+
+    // log when a client connects to the server
+    io.on("connection", (socket) => {
+      console.log(`Client connected: ${socket.id}`);
+    });
+
+    // log any errors that occur on the server
+    io.on("error", (err) => {
+      console.log(`Server error: ${err}`);
+    });
   }
+
   res.end();
 };
