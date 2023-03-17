@@ -1,24 +1,24 @@
-import { Server } from "socket.io";
-import messageHandler from "./messageHandler";
+import { NextApiRequest } from "next";
+import { NextApiResponseServerIO } from "src/types/next";
+import { Server as ServerIO } from "socket.io";
+import { Server as NetServer } from "http";
 
-export default function SocketHandler(req:any, res:any) {
-  // It means that socket server was already initialised
-  if (res.socket.server.io) {
-    console.log("Already set up");
-    res.end();
-    return;
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
+  if (!res.socket.server.io) {
+    console.log("New Socket.io server...");
+    // adapt Next's net Server to http Server
+    const httpServer: NetServer = res.socket.server as any;
+    const io = new ServerIO(httpServer, {
+      path: "/api/socket",
+    });
+    // append SocketIO server to Next.js socket server response
+    res.socket.server.io = io;
   }
-
-  const io = new Server(res.socket.server);
-  res.socket.server.io = io;
-
-  const onConnection = (socket:any) => {
-    messageHandler(io, socket);
-  };
-
-  // Define actions inside
-  io.on("connection", onConnection);
-
-  console.log("Setting up socket");
   res.end();
-}
+};
