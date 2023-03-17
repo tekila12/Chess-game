@@ -21,22 +21,18 @@ const Index: React.FC = () => {
   const [chat, setChat] = useState<IMsg[]>([]);
   const [msg, setMsg] = useState<string>("");
   useEffect(() => {
-    let socket:any;
+
     // connect to socket server
-    if (process.env.BASE_URL) {
-      socket = SocketIOClient(process.env.BASE_URL, {
-        path: '/api/socket',
-        withCredentials: true,
-        extraHeaders: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-id, Content-Length, X-Requested-With',
-        },
-      });
-      // ...
-    } else {
-      console.error('BASE_URL environment variable is not defined');
-    }
+    const socketUrl = process.env.BASE_URL || "http://localhost:3000";
+    const socket = SocketIOClient(socketUrl, {
+      path: "/api/socket",
+      withCredentials: true,
+      extraHeaders: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization, x-id, Content-Length, X-Requested-With",
+      },
+    });
 
     console.log(process.env.BASE_URL);
     // log socket connection
