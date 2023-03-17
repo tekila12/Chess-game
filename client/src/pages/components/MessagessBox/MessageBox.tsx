@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import SocketIOClient from 'socket.io-client';
+import io from 'socket.io-client';
 
 
 interface IMsg {
@@ -21,38 +22,48 @@ const Index: React.FC = () => {
   const [chat, setChat] = useState<IMsg[]>([]);
   const [msg, setMsg] = useState<string>("");
   useEffect(() => {
-
     // connect to socket server
-    const socketUrl = process.env.BASE_URL || "http://localhost:3000";
-    const socket = SocketIOClient(socketUrl, {
-      path: "/api/socket",
-      withCredentials: true,
-      extraHeaders: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization, x-id, Content-Length, X-Requested-With",
-      },
-    });
-
-    console.log(process.env.BASE_URL);
-    // log socket connection
-    if (socket) {
-      socket.on("connect", () => {
-        console.log("SOCKET CONNECTED!", socket.id);
-        setConnected(true);
-      });
+    let socket:any;
   
-      // update chat on new message dispatched
-      socket.on("message", (message: IMsg) => {
-        chat.push(message);
-        setChat([...chat]);
-      });
+    const fetchSocket = async () => {
+      try {
+        await fetch("/api/socket");
+        socket = io(process.env.BASE_URL || "http://localhost:3000", {
+          path: "/api/socket",
+          withCredentials: true,
+          extraHeaders: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, x-id, Content-Length, X-Requested-With",
+          },
+        });
   
-      // socket disconnect on unmount
-      return () => {
+        console.log(process.env.BASE_URL);
+  
+        // log socket connection
+        socket.on("connect", () => {
+          console.log("SOCKET CONNECTED!", socket.id);
+          setConnected(true);
+        });
+  
+        // update chat on new message dispatched
+        socket.on("message", (message: IMsg) => {
+          chat.push(message);
+          setChat([...chat]);
+        });
+      } catch (err) {
+        console.error("Error fetching socket:", err);
+      }
+    };
+  
+    fetchSocket();
+  
+    // socket disconnect on unmount
+    return () => {
+      if (socket) {
         socket.disconnect();
-      };
-    }
+      }
+    };
   }, []);
 
   const sendMessage = async () => {
