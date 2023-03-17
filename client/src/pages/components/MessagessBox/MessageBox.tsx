@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Socket,  } from "socket.io-client";
-import  SocketIOClient  from "socket.io-client";
+import SocketIOClient from 'socket.io-client';
 
 
 interface IMsg {
@@ -24,8 +23,8 @@ const Index: React.FC = () => {
 
   useEffect((): any => {
     // connect to socket server
-    const socket: Socket= SocketIOClient("https://6413ce2a5517a30008bee579--ubiquitous-fox-edcb42.netlify.app/", {
-      path: "/api/socket",
+    const socket = SocketIOClient(process.env.BASE_URL, {
+      path: '/api/socket',
     });
 
     // log socket connection
@@ -70,7 +69,7 @@ const Index: React.FC = () => {
   };
 
   return (
-    <div className="messageBox">
+    <div className="messageBox" >
       <div >
         <h1 >Realtime Chat App</h1>
         <h2 >in Next.js and Socket.io</h2>

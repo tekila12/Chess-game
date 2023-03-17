@@ -15,7 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
     // adapt Next's net Server to http Server
     const httpServer: NetServer = res.socket.server as any;
     const io = new ServerIO(httpServer, {
-      path: "https://6413ce2a5517a30008bee579--ubiquitous-fox-edcb42.netlify.app/",
+      path: "/api/socket",
     });
     // append SocketIO server to Next.js socket server response
     res.socket.server.io = io;
