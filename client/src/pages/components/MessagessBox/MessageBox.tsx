@@ -24,7 +24,7 @@ const Index: React.FC = () => {
 
   useEffect((): any => {
     // connect to socket server
-    const socket: Socket= SocketIOClient("http://localhost:3001", {
+    const socket: Socket= SocketIOClient("https://6413ce2a5517a30008bee579--ubiquitous-fox-edcb42.netlify.app/", {
       path: "/api/socket",
     });
 
