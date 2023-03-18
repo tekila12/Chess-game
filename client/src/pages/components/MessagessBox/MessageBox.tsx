@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import SocketIOClient from 'socket.io-client';
-import io from 'socket.io-client';
+import SocketIOClient from "socket.io-client";
+import io from "socket.io-client";
+
 
 
 interface IMsg {
@@ -16,54 +17,34 @@ const MessageBox: React.FC = () => {
   const inputRef = useRef(null);
 
   // connected flag
-
+  const [connected, setConnected] = useState<boolean>(false);
 
   // init chat and message
   const [chat, setChat] = useState<IMsg[]>([]);
   const [msg, setMsg] = useState<string>("");
+
   useEffect(() => {
-    // connect to socket server
-    let socket:any;
+    const socketUrl = process.env.BASE_URL;
+    
+    if (!socketUrl) {
+      console.log("No socket URL provided");
+      return;
+    }
+    
+    const socket = io(socketUrl, { path: "/api/socket" });
+    
+    socket.on("connect", () => {
+      console.log("Socket connected: ", socket.id);
+      setConnected(true);
+    });
   
-    const fetchSocket = async () => {
-      try {
-        await fetch("/api/socket");
-        socket = io(process.env.BASE_URL || "http://localhost:3000", {
-          path: "/api/socket",
-          withCredentials: true,
-          extraHeaders: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization, x-id, Content-Length, X-Requested-With",
-          },
-        });
+    socket.on("message", (message: IMsg) => {
+      setChat(prevChat => [...prevChat, message]);
+    });
   
-        console.log(process.env.BASE_URL);
-  
-        // log socket connection
-        socket.on("connect", () => {
-          console.log("SOCKET CONNECTED!", socket.id);
-        
-        });
-  
-        // update chat on new message dispatched
-        socket.on("message", (message: IMsg) => {
-          chat.push(message);
-          setChat([...chat]);
-        });
-      } catch (err) {
-        console.error("Error fetching socket:", err);
-      }
-    };
-  
-    fetchSocket();
-  
-    // socket disconnect on unmount
     return () => {
-      if (socket) {
-        socket.disconnect();
-      }
-    };
+      socket.disconnect();
+    }
   }, []);
 
   const sendMessage = async () => {
@@ -87,67 +68,70 @@ const MessageBox: React.FC = () => {
       if (resp.ok) setMsg("");
     }
 
-  
-    
+    // focus after click
+   
   };
 
+
   return (
-    <div className="messageBox" >
-      <div >    
-      </div>
-      <div>
-        <div >
-          {chat.length ? (
-            chat.map((chat, i) => (
-              <div key={"msg_" + i} >
-                <span
-                 
-                >
-                  {chat.user === user ? "Me" : chat.user}
-                </span>
-                : {chat.msg}
-              </div>
-            ))
-          ) : (
-            <div>
-              No chat messages
-            </div>
-          )}
-        </div>
-        <div>
-          <div>
-            <div >
-              <input
-                ref={inputRef}
-                type="text"
-                value={msg}
-                placeholder={  "Connecting..."}
-               
-              
-                onChange={(e) => {
-                  setMsg(e.target.value);
-                }}
-                onKeyPress={(e) => {
-                  if (e.key === "Enter") {
-                    sendMessage();
-                  }
-                }}
-              />
-            </div>
-            <div>
-              <button
-               
-                onClick={sendMessage}
+    <div className="messageBox">
+    <div>
+      <h1 >Realtime Chat App</h1>
+      <h2 >in Next.js and Socket.io</h2>
+    </div>
+    <div >
+      <div >
+        {chat.length ? (
+          chat.map((chat, i) => (
+            <div key={"msg_" + i} >
+              <span
               
               >
-                SEND
-              </button>
+                {chat.user === user ? "Me" : chat.user}
+              </span>
+              : {chat.msg}
             </div>
+          ))
+        ) : (
+          <div>
+            No chat messages
+          </div>
+        )}
+      </div>
+      <div >
+        <div >
+          <div >
+            <input
+              ref={inputRef}
+              type="text"
+              value={msg}
+              placeholder={connected ? "Type a message..." : "Connecting..."}
+             
+              disabled={!connected}
+              onChange={(e) => {
+                setMsg(e.target.value);
+              }}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  sendMessage();
+                }
+              }}
+            />
+          </div>
+          <div >
+            <button
+             
+              onClick={sendMessage}
+              disabled={!connected}
+            >
+              SEND
+            </button>
           </div>
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default MessageBox;

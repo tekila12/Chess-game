@@ -17,7 +17,7 @@ export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
     const io = new ServerIO(httpServer, {
       path: "/api/socket",
       cors: {
-        origin: "http://localhost:3000", // or specify your client's origin here
+        origin: "*", // or specify your client's origin here
         methods: ["GET", "POST"]
       }
     });
