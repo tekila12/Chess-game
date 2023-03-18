@@ -16,7 +16,7 @@ const MessageBox: React.FC = () => {
   const inputRef = useRef(null);
 
   // connected flag
-  const [connected, setConnected] = useState<boolean>(false);
+
 
   // init chat and message
   const [chat, setChat] = useState<IMsg[]>([]);
@@ -43,7 +43,7 @@ const MessageBox: React.FC = () => {
         // log socket connection
         socket.on("connect", () => {
           console.log("SOCKET CONNECTED!", socket.id);
-          setConnected(true);
+        
         });
   
         // update chat on new message dispatched
@@ -121,9 +121,9 @@ const MessageBox: React.FC = () => {
                 ref={inputRef}
                 type="text"
                 value={msg}
-                placeholder={connected ? "Type a message..." : "Connecting..."}
+                placeholder={  "Connecting..."}
                
-                disabled={!connected}
+              
                 onChange={(e) => {
                   setMsg(e.target.value);
                 }}
@@ -138,7 +138,7 @@ const MessageBox: React.FC = () => {
               <button
                
                 onClick={sendMessage}
-                disabled={!connected}
+              
               >
                 SEND
               </button>
