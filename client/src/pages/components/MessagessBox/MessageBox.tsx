@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import SocketIOClient from "socket.io-client";
-import io from "socket.io-client";
+
 
 
 
@@ -23,39 +23,29 @@ const MessageBox: React.FC = () => {
   const [chat, setChat] = useState<IMsg[]>([]);
   const [msg, setMsg] = useState<string>("");
 
- 
+  useEffect((): any => {
+    // connect to socket server
+    const socket = SocketIOClient.connect(process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000', {
+      path: "/api/socket",
+    });
 
-  const socketInitializer = async () => {
-    try {
-      const response = await fetch("/api/socket");
-      if (!response.ok) {
-        throw new Error("Failed to connect to socket server");
-      }
-  
-      const socket = io("http://localhost:3000", {
-        path: "/api/socket",
-      });
-  
-      // log socket connection
-      socket.on("connect", () => {
-        console.log("SOCKET CONNECTED!", socket.id);
-        setConnected(true);
-      });
-  
-      // update chat on new message dispatched
-      socket.on("message", (message: IMsg) => {
-        setChat((chat) => [...chat, message]);
-      });
-    } catch (error) {
-      console.error(error);
-      // handle error
-    }
-  };
+    console.log(process.env.NEXT_PUBLIC_BASE_URL);
+    // log socket connection
+    socket.on("connect", () => {
+      console.log("SOCKET CONNECTED!", socket.id);
+      setConnected(true);
+    });
 
+    // update chat on new message dispatched
+    socket.on("message", (message: IMsg) => {
+      chat.push(message);
+      setChat([...chat]);
+    });
 
-  useEffect(() => {
-    socketInitializer();
+    // socket disconnet onUnmount if exists
+    if (socket) return () => socket.disconnect();
   }, []);
+
   const sendMessage = async () => {
     if (msg) {
       // build message obj
