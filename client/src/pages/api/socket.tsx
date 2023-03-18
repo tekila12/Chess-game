@@ -1,21 +1,39 @@
-import { Server } from "socket.io";
+import { NextApiRequest } from "next";
+import { NextApiResponseServerIO } from "src/types/next";
+import { Server as ServerIO } from "socket.io";
+import { Server as NetServer } from "http";
 
-export default function SocketHandler(req:any, res:any) {
-  if (res.socket.server.io) {
-    console.log("Already set up");
-    res.end();
-    return;
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
+  if (!res.socket.server.io) {
+    console.log("New Socket.io server...");
+    // adapt Next's net Server to http Server
+    const httpServer: NetServer = res.socket.server as any;
+    const io = new ServerIO(httpServer, {
+      path: "/api/socket",
+      cors: {
+        origin: "http://localhost:3000", // or specify your client's origin here
+        methods: ["GET", "POST"]
+      }
+    });
+    // append SocketIO server to Next.js socket server response
+    res.socket.server.io = io;
+
+    // log when a client connects to the server
+    io.on("connection", (socket) => {
+      console.log(`Client connected: ${socket.id}`);
+    });
+
+    // log any errors that occur on the server
+    io.on("error", (err) => {
+      console.log(`Server error: ${err}`);
+    });
   }
 
-  const io = new Server(res.socket.server);
-  res.socket.server.io = io;
-
-  io.on("connection", (socket) => {
-    socket.on("send-message", (obj) => {
-      io.emit("receive-message", obj);
-    });
-  });
-
-  console.log("Setting up socket");
   res.end();
-}
+};
