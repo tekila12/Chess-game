@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from "@/styles/Home.module.css";
 
-import MessageBox from './components/MessagessBox/MessageBox';
+import MessageBox from './MessageBox';
 import { Canvas, } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei';
 
