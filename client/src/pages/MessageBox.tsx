@@ -1,137 +1,129 @@
-import React, { useState, useEffect, useRef } from "react";
-import SocketIOClient from "socket.io-client";
+import io from "socket.io-client";
+import { useState, useEffect } from "react";
 
+let socket:any;
 
+type Message = {
+  author: string;
+  message: string;
+};
 
+export default function MessageBox() {
+  const [username, setUsername] = useState("");
+  const [chosenUsername, setChosenUsername] = useState("");
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<Array<Message>>([]);
 
-interface IMsg {
-  user: string;
-  msg: string;
-}
-
-// create random user
-const user = "User_" + String(new Date().getTime()).substr(-3);
-
-// component
-const MessageBox: React.FC = () => {
-  const inputRef = useRef(null);
-
-  // connected flag
-  const [connected, setConnected] = useState<boolean>(false);
-
-  // init chat and message
-  const [chat, setChat] = useState<IMsg[]>([]);
-  const [msg, setMsg] = useState<string>("");
-
-  useEffect((): any => {
-    // connect to socket server
-    const socket = SocketIOClient.connect(process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000' , {
-      path: "/api/socket",
-    });
-
-    console.log(process.env.NEXT_PUBLIC_BASE_URL);
-    // log socket connection
-    socket.on("connect", () => {
-      console.log("SOCKET CONNECTED!", socket.id);
-      setConnected(true);
-    });
-
-    // update chat on new message dispatched
-    socket.on("message", (message: IMsg) => {
-      chat.push(message);
-      setChat([...chat]);
-    });
-
-    // socket disconnet onUnmount if exists
-    if (socket) return () => socket.disconnect();
+  useEffect(() => {
+    socketInitializer();
   }, []);
 
+  const socketInitializer = async () => {
+    // We just call it because we don't need anything else out of it
+    await fetch("/api/socket");
+
+    socket = io();
+
+    socket.on("newIncomingMessage", (msg:any) => {
+      console.log("newmessgae");
+      setMessages((currentMsg) => [
+        ...currentMsg,
+        { author: msg.author, message: msg.message },
+      ]);
+      console.log(messages);
+    });
+  };
+  
+
+  
+
+
   const sendMessage = async () => {
-    if (msg) {
-      // build message obj
-      const message: IMsg = {
-        user,
-        msg,
-      };
+    socket.emit("createdMessage", { author: chosenUsername, message });
+    console.log("created");
 
-      // dispatch message to other users
-      const resp = await fetch("/api/messagerHandler", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(message),
-      });
-
-      // reset field if OK
-      if (resp.ok) setMsg("");
-    }
-
-    // focus after click
-   
+    setMessages((currentMsg) => [
+      ...currentMsg,
+      { author: chosenUsername, message },
+    ]);
+    setMessage("");
   };
 
+  const handleKeypress = (e:any) => {
+    //it triggers by pressing the enter key
+    if (e.keyCode === 13) {
+      if (message) {
+        sendMessage();
+      }
+    }
+  };
 
   return (
     <div className="messageBox">
-    <div>
-      <h1 >Realtime Chat App</h1>
-      <h2 >in Next.js and Socket.io</h2>
-    </div>
-    <div >
-      <div >
-        {chat.length ? (
-          chat.map((chat, i) => (
-            <div key={"msg_" + i} >
-              <span
-              
-              >
-                {chat.user === user ? "Me" : chat.user}
-              </span>
-              : {chat.msg}
-            </div>
-          ))
-        ) : (
-          <div>
-            No chat messages
-          </div>
-        )}
-      </div>
-      <div >
-        <div >
-          <div >
+      <main >
+        {!chosenUsername ? (
+          <>
+            <h3 >
+              How people should call you?
+            </h3>
             <input
-              ref={inputRef}
               type="text"
-              value={msg}
-              placeholder={connected ? "Type a message..." : "Connecting..."}
-             
-              disabled={!connected}
-              onChange={(e) => {
-                setMsg(e.target.value);
-              }}
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  sendMessage();
-                }
-              }}
+              placeholder="Identity..."
+              value={username}
+              
+              onChange={(e) => setUsername(e.target.value)}
             />
-          </div>
-          <div >
             <button
+              onClick={() => {
+                setChosenUsername(username);
+              }}
              
-              onClick={sendMessage}
-              disabled={!connected}
             >
-              SEND
+              Go!
             </button>
-          </div>
-        </div>
-      </div>
+          </>
+        ) : (
+          <>
+            <p >
+              Your username: {username}
+            </p>
+            <div >
+              <div>
+                {messages.map((msg, i) => {
+                  return (
+                    <div
+                     
+                      key={i}
+                    >
+                      {msg.author} : {msg.message}
+                    </div>
+                  );
+                })}
+              </div>
+              <div >
+                <input
+                  type="text"
+                  placeholder="New message..."
+                  value={message}
+                 
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyUp={handleKeypress}
+                />
+                <div>
+                  <button
+                    
+                    onClick={() => {
+                      sendMessage();
+                    }}
+                  >
+                    Send
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </main>
     </div>
-  </div>
-);
-};
-
-export default MessageBox;
-
+  );
+}
