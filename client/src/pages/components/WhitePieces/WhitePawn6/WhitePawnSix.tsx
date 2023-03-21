@@ -27,7 +27,7 @@ const WhitePawnSix = ({ material, position, geometry, actions, ...props }: White
     const intersection = event.intersections[0];
     if (intersection) {
       intersection.object.position.z -= 2;
-      setSpring({ position: [props.position[0], props.position[1], props.position[2] - 2] });
+   
       actions.Action.setLoop(THREE.LoopOnce);
       actions.Action.play();
     }
