@@ -35,7 +35,7 @@ const WhitePawnSix = ({ material, position, geometry, actions, ...props }: White
 
   return (
     <group onClick={handlePointerMove}>
-      <animated.mesh ref={meshRef} material={props.material} geometry={geometry} position={spring.position} />
+      <animated.mesh ref={meshRef} material={props.material} geometry={geometry} position={props.position} />
     </group>
   );
 };
