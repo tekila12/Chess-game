@@ -1,28 +1,27 @@
-const app =  require ("express") ();
-const server = require ('http').createServer(app)
-const io = require('socket.io')(server,{
-    cors: {
-      origin: 'http://localhost:3000',
-      methods: 'GET,PUT,POST,DELETE,OPTIONS'.split(','),
-      credentials: true
-    }
+const express = require('express');
+const http = require('http');
+const socketIO = require('socket.io');
+
+const app = express();
+const server = http.createServer(app);
+const io = socketIO(server);
+
+io.on('connection', (socket) => {
+  console.log('New client connected');
+
+  // Listen for move events
+  socket.on('move', (data) => {
+    console.log('Received move event:', data);
+    // Broadcast the move event to all clients except the sender
+    socket.broadcast.emit('move', data);
   });
 
-io.on('connection', (socket) => { 
-    console.log('connected a new client');
-    socket.on("room", function (data){
-    io.emit("romms", data)
-      console.log(data)
-})
-})
-
-
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-    });
-
-
-    
-server.listen(8080, () => {
-    console.log('Server listening on port 8080');
+  // Listen for disconnect events
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
   });
+});
+
+server.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});

@@ -2,40 +2,36 @@ import React, { useRef, useState } from 'react';
 import * as THREE from 'three';
 import { ThreeEvent, useFrame } from '@react-three/fiber';
 import { Material, BufferGeometry } from 'three';
-import { useSpring, animated } from '@react-spring/three';
+import { Socket } from 'socket.io-client';
 
 type WhitePawnSixProps = {
   material: Material | Material[];
   position: [number, number, number];
-  geometry: THREE.BufferGeometry;
+  geometry: BufferGeometry;
   actions: any;
-  onClick: () => void;
+  socket: Socket;
 };
 
-interface SpringProps {
-  position: [number, number, number];
-}
-
-const WhitePawnSix = ({ material, position, geometry, actions, ...props }: WhitePawnSixProps & any) => {
+const WhitePawnSix = ({ material, position, geometry, actions, socket, ...props }: WhitePawnSixProps & any) => {
   const meshRef = useRef<THREE.Mesh>(null);
   const [isSelected, setSelected] = useState(false);
-  const [spring, setSpring] = useSpring<SpringProps>(() => ({
-    position: [props.position[0], props.position[1], props.position[2]],
-  }));
 
   const handlePointerMove = (event: ThreeEvent<MouseEvent>) => {
     const intersection = event.intersections[0];
     if (intersection) {
-      intersection.object.position.z -= 2;
-   
+      console.log(intersection.object);
+      const newPosition = new THREE.Vector3().copy(meshRef.current!.position);
+      newPosition.z -= 2;
+      meshRef.current!.position.copy(newPosition);
       actions.Action.setLoop(THREE.LoopOnce);
       actions.Action.play();
+      socket.emit('move', newPosition.toArray());
     }
   };
 
   return (
     <group onClick={handlePointerMove}>
-      <animated.mesh ref={meshRef} material={props.material} geometry={geometry} position={props.position} />
+      <mesh ref={meshRef} material={material} geometry={geometry} position={position} />
     </group>
   );
 };
