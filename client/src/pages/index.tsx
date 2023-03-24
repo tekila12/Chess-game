@@ -27,7 +27,7 @@ const Home: React.FunctionComponent = () => {
         </Canvas>
   
       <div style={{ width: "100vw", height: "100vh", background: 'black' }}>
-             <MessageBox /> 
+    
       </div> 
          </div>
   );

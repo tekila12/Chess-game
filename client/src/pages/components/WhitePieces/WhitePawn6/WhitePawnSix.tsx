@@ -1,37 +1,65 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { ThreeEvent, useFrame } from '@react-three/fiber';
 import { Material, BufferGeometry } from 'three';
-import { Socket } from 'socket.io-client';
+import io from 'socket.io-client';
 
 type WhitePawnSixProps = {
   material: Material | Material[];
   position: [number, number, number];
-  geometry: BufferGeometry;
+  geometry: THREE.BufferGeometry;
   actions: any;
-  socket: Socket;
 };
 
-const WhitePawnSix = ({ material, position, geometry, actions, socket, ...props }: WhitePawnSixProps & any) => {
-  const meshRef = useRef<THREE.Mesh>(null);
+const WhitePawnSix = ({ material, position, geometry, actions, ...props }: WhitePawnSixProps & any) => {
+  const mesh = useRef<THREE.Mesh>(null);
   const [isSelected, setSelected] = useState(false);
+  const [socketRef, setSocketRef] = useState<SocketIOClient.Socket | null>(null);
+
+  useEffect(() => {
+    const socket = io.connect('http://localhost:5000');
+    setSocketRef(socket);
+
+    return () => {
+      socket.disconnect();
+    }
+  }, []);
 
   const handlePointerMove = (event: ThreeEvent<MouseEvent>) => {
-    const intersection = event.intersections[0];
-    if (intersection) {
-      console.log(intersection.object);
-      const newPosition = new THREE.Vector3().copy(meshRef.current!.position);
-      newPosition.z -= 2;
-      meshRef.current!.position.copy(newPosition);
-      actions.Action.setLoop(THREE.LoopOnce);
-      actions.Action.play();
-      socket.emit('move', newPosition.toArray());
+    if (socketRef) {
+      const intersection = event.intersections[0];
+      if (intersection) {
+        // Move the mesh along the x-axis by 50px
+        intersection.object.position.z += -2;
+
+        // Emit a "move" event with the new position
+        const { x, y, z } = intersection.object.position;
+        const newPosition = new THREE.Vector3(x, y, z);
+        socketRef.emit('move', newPosition.toArray());
+
+        // Play the animation once and stop
+        actions.Action.setLoop(THREE.LoopOnce);
+        actions.Action.play();
+      }
     }
   };
 
+  useEffect(() => {
+    if (socketRef) {
+      socketRef.on('move', (data: any) => {
+        console.log('Received move event:', data);
+
+        // Update the position of the mesh
+        const [x, y, z] = data;
+        const newPosition = new THREE.Vector3(x, y, z);
+        mesh.current?.position.copy(newPosition);
+      });
+    }
+  }, [socketRef]);
+
   return (
     <group onClick={handlePointerMove}>
-      <mesh ref={meshRef} material={material} geometry={geometry} position={position} />
+      <mesh ref={mesh} position={props.position} material={props.material} geometry={geometry} />
     </group>
   );
 };
