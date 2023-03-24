@@ -8,7 +8,9 @@ import React, { useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
 import WhitePawnSix from './WhitePieces/WhitePawn6/WhitePawnSix';
-import { Object3D } from 'three';
+import { Mesh, Object3D } from 'three';
+
+
 
 type ChessBoardProps = JSX.IntrinsicElements['group']
 
@@ -181,11 +183,11 @@ type ActionName =
 type GLTFActions = Record<ActionName, THREE.AnimationAction>
 
 export default function ChessBoard(props: JSX.IntrinsicElements['group']) {
-    const group = useRef<THREE.Mesh>(null);
+  const group = useRef<Mesh>(null!);
   const { nodes, materials, animations } = useGLTF('/chessP.glb') as GLTFResult
   const { actions } = useAnimations(animations, group)
   return (
-    <group ref={group} {...props} dispose={null}>
+    <group  {...props} dispose={null}>
       <group name="Scene">
         <group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]}>
           <group name="Collada_visual_scene_group" rotation={[Math.PI / 2, 0, 0]}>

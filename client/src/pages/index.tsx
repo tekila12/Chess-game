@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import styles from "@/styles/Home.module.css";
 
 import MessageBox from './MessageBox';
 import { Canvas, } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei';
-import ChessBoard from './components/ChessBoard';
-
+import dynamic from 'next/dynamic';
+const ChessBoard = dynamic(() => import('./components/ChessBoard'),{
+  ssr: false,
+  })
 
 
 // const Loader = () => {
@@ -17,19 +19,24 @@ import ChessBoard from './components/ChessBoard';
 
 const Home: React.FunctionComponent = () => {
   return (
+    <Suspense>
+
+   
     <div style={{ width: "100vw", height: "90vh", background: 'black' }}>
  
- <Canvas >
+  <Canvas >
         <ambientLight intensity={1.25} />
         <directionalLight />
         <ChessBoard />
         <OrbitControls />
         </Canvas>
+
+ 
   
       <div style={{ width: "100vw", height: "100vh", background: 'black' }}>
     
       </div> 
-         </div>
+         </div> </Suspense>
   );
 };
 

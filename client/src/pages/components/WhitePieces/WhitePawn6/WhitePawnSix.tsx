@@ -38,8 +38,7 @@ const WhitePawnSix = ({ material, position, geometry, actions, ...props }: White
         socketRef.emit('move', newPosition.toArray());
 
         // Play the animation once and stop
-        actions.Action.setLoop(THREE.LoopOnce);
-        actions.Action.play();
+      
       }
     }
   };
