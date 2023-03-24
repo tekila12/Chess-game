@@ -1,11 +1,13 @@
-import React, { Suspense,lazy } from 'react';
+import React, { Suspense } from 'react';
 import styles from "@/styles/Home.module.css";
 
 import MessageBox from './MessageBox';
 import { Canvas, } from '@react-three/fiber'
 import { Center, OrbitControls, useProgress } from '@react-three/drei';
-
-const ChessBoard = lazy(() => import("./components/ChessBoard"));
+import dynamic from 'next/dynamic';
+const ChessBoard = dynamic(() => import('./components/ChessBoard'),{
+  ssr: false,
+  })
 
 
 const Loader = () => {
@@ -17,7 +19,9 @@ const Loader = () => {
 
 const Home: React.FunctionComponent = () => {
   return (
-    <Suspense >
+    <Suspense>
+
+   
     <div style={{ width: "100vw", height: "90vh", background: 'black' }}>
  
   <Canvas >
@@ -32,7 +36,7 @@ const Home: React.FunctionComponent = () => {
       <div style={{ width: "100vw", height: "100vh", background: 'black' }}>
     
       </div> 
-         </div></Suspense>
+         </div> </Suspense>
   );
 };
 
