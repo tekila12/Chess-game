@@ -182,7 +182,7 @@ type GLTFActions = Record<ActionName, THREE.AnimationAction>
 
 export default function ChessBoard(props: JSX.IntrinsicElements['group']) {
   const group = useRef<Mesh>(null!);
-  const { nodes, materials, animations } = useGLTF('https://ubiquitous-fox-edcb42.netlify.app/public/chessP.glb') as GLTFResult
+  const { nodes, materials, animations } = useGLTF('/chessP.glb') as GLTFResult
   const { actions } = useAnimations(animations, group)
   return (
     <group  {...props} dispose={null}>
