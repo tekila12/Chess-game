@@ -10,6 +10,7 @@ const ChessBoard = dynamic(() => import('./components/ChessBoard'),{
   })
 
 
+
 const Loader = () => {
   const {progress} = useProgress()
   return <Center >
@@ -19,10 +20,8 @@ const Loader = () => {
 
 const Home: React.FunctionComponent = () => {
   return (
-    <Suspense>
-
-   
-    <div style={{ width: "100vw", height: "90vh", background: 'black' }}>
+  <Suspense>
+     <div style={{ width: "100vw", height: "90vh", background: 'black' }}>
  
   <Canvas >
         <ambientLight intensity={1.25} />
@@ -36,7 +35,11 @@ const Home: React.FunctionComponent = () => {
       <div style={{ width: "100vw", height: "100vh", background: 'black' }}>
     
       </div> 
-         </div> </Suspense>
+         </div> 
+  </Suspense>
+
+   
+   
   );
 };
 
