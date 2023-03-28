@@ -1,8 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
-import { ThreeEvent, useFrame } from '@react-three/fiber';
-import { Material, BufferGeometry } from 'three';
+import { ThreeEvent, useFrame, useThree } from '@react-three/fiber';
+import { Material, } from 'three';
 import io from 'socket.io-client';
+import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler';
+import { BufferGeometry } from 'three';
 
 type WhitePawnSixProps = {
   material: Material | Material[];
@@ -10,6 +12,28 @@ type WhitePawnSixProps = {
   geometry: THREE.BufferGeometry;
   actions: any;
 };
+
+function FragmentedMesh({ mesh }: { mesh: THREE.Mesh }) {
+  const { scene } = useThree()
+
+  // Sample points on the surface of the mesh
+  const sampler = new MeshSurfaceSampler(mesh).build()
+  const points = sampler.sample(50)
+
+  // Create new meshes for each fragment
+  points.forEach((point) => {
+    const geometry = new BufferGeometry()
+    const material = mesh.material.clone()
+    const fragment = new THREE.Mesh(geometry, material)
+    fragment.position.copy(point)
+    scene.add(fragment)
+  })
+
+  // Remove the original mesh from the scene
+  scene.remove(mesh)
+
+  return null
+}
 
 const WhitePawnSix = ({ material, position, geometry, actions, ...props }: WhitePawnSixProps & any) => {
   const mesh = useRef<THREE.Mesh>(null);
@@ -29,16 +53,15 @@ const WhitePawnSix = ({ material, position, geometry, actions, ...props }: White
     if (socketRef) {
       const intersection = event.intersections[0];
       if (intersection) {
-        // Move the mesh along the x-axis by 50px
-        intersection.object.position.z += -2;
+        // Break the mesh into pieces
+        const fragmentedMesh = new THREE.Mesh(geometry, material)
+        fragmentedMesh.position.copy(mesh.current!.position)
+        FragmentedMesh({ mesh: fragmentedMesh })
 
         // Emit a "move" event with the new position
         const { x, y, z } = intersection.object.position;
         const newPosition = new THREE.Vector3(x, y, z);
         socketRef.emit('move', newPosition.toArray());
-
-        // Play the animation once and stop
-      
       }
     }
   };
