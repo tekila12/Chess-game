@@ -13,27 +13,27 @@ type WhitePawnSixProps = {
   actions: any;
 };
 
-function FragmentedMesh({ mesh }: { mesh: THREE.Mesh }) {
-  const { scene } = useThree()
+// function FragmentedMesh({ mesh }: { mesh: THREE.Mesh }) {
+//   const { scene } = useThree()
 
-  // Sample points on the surface of the mesh
-  const sampler = new MeshSurfaceSampler(mesh).build()
-  const points = sampler.sample(50)
+//   // Sample points on the surface of the mesh
+//   const sampler = new MeshSurfaceSampler(mesh).build()
+//   const points = sampler.sample(50)
 
-  // Create new meshes for each fragment
-  points.forEach((point) => {
-    const geometry = new BufferGeometry()
-    const material = mesh.material.clone()
-    const fragment = new THREE.Mesh(geometry, material)
-    fragment.position.copy(point)
-    scene.add(fragment)
-  })
+//   // Create new meshes for each fragment
+//   points.forEach((point) => {
+//     const geometry = new BufferGeometry()
+//     const material = mesh.material.clone()
+//     const fragment = new THREE.Mesh(geometry, material)
+//     fragment.position.copy(point)
+//     scene.add(fragment)
+//   })
 
-  // Remove the original mesh from the scene
-  scene.remove(mesh)
+//   // Remove the original mesh from the scene
+//   scene.remove(mesh)
 
-  return null
-}
+//   return null
+// }
 
 const WhitePawnSix = ({ material, position, geometry, actions, ...props }: WhitePawnSixProps & any) => {
   const mesh = useRef<THREE.Mesh>(null);
