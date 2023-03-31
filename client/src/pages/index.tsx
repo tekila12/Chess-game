@@ -3,18 +3,11 @@ import MessageBox from './MessageBox';
 import { Canvas, } from '@react-three/fiber'
 import { Center, OrbitControls, useProgress } from '@react-three/drei';
 import dynamic from 'next/dynamic';
-const ChessBoard = dynamic(() => import('./components/ChessBoard'),{
-  ssr: false,
-  })
+import ChessBoard from './components/ChessBoard';
 
 
 
-const Loader = () => {
-  const {progress} = useProgress()
-  return <Center >
 
-  </Center>
-}
 
 const Home: React.FunctionComponent = () => {
   return (
