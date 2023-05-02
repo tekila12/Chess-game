@@ -9,15 +9,16 @@ import ChessBoard from './components/ChessBoard';
 
 
 
+
 const Home: React.FunctionComponent = () => {
   return (
-  <Suspense>
+
      <div style={{ width: "100vw", height: "90vh", background: 'black' }}>
  
   <Canvas >
         <ambientLight intensity={1.25} />
         <directionalLight />
-        <ChessBoard />
+       <ChessBoard />
         <OrbitControls />
         </Canvas>
 
@@ -27,7 +28,7 @@ const Home: React.FunctionComponent = () => {
     
       </div> 
          </div> 
-  </Suspense>
+ 
 
    
    
