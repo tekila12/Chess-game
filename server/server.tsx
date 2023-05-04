@@ -6,7 +6,7 @@ const cors = require('cors');
 // enable CORS
 const corsOptions = {
   origin: 'http://localhost:3000',
-  optionsSuccessStatus: 200,
+ 
 };
 const app = express();
 const server = http.createServer(app);
