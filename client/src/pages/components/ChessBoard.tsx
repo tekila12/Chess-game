@@ -6,9 +6,9 @@ Command: npx gltfjsx@6.1.4 chessOne.glb
 import React, { useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
 
-export function Model(props) {
+export default function ChessBoard(props:any) {
   const group = useRef()
-  const { nodes, materials, animations } = useGLTF('/chessOne.glb')
+  const { nodes, materials:, animations } = useGLTF('/chessOne.glb')
   const { actions } = useAnimations(animations, group)
   return (
     <group ref={group} {...props} dispose={null}>
