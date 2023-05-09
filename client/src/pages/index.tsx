@@ -15,7 +15,7 @@ const Home: React.FunctionComponent = () => {
 
      <div style={{ width: "100vw", height: "90vh", background: 'black' }}>
  
-  <Canvas >
+        <Canvas camera={{ position: [0, 185, 50], fov: 7, near: 1, far: 5000 }} dpr={[1,2]} >
         <ambientLight intensity={1.25} />
         <directionalLight />
        <ChessBoard />
