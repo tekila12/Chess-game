@@ -75,7 +75,7 @@ type GLTFActions = Record<ActionName, THREE.AnimationAction>
 export default function Chessboard(props: JSX.IntrinsicElements['group']) {
   const group = useRef<THREE.Group>()
   const { nodes, materials, animations } = useGLTF('/Chess.glb') as GLTFResult
-  const { actions } = useAnimations(animations, group)
+  
   return (
     <group  {...props} dispose={null}>
       <group name="Scene">
