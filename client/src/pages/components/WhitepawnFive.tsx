@@ -4,14 +4,14 @@ import { ThreeEvent, useFrame } from '@react-three/fiber';
 import { Material, BufferGeometry } from 'three';
 import io from 'socket.io-client';
 
-type WhitePawnSixProps = {
+type WhitePawnFiveProps = {
   material: Material | Material[];
   position: [number, number, number];
   geometry: THREE.BufferGeometry;
   actions: any;
 };
 
-const WhitePawnSix = ({ material, position, geometry, actions, ...props }: WhitePawnSixProps & any) => {
+const WhitePawnFive = ({ material, position, geometry, actions, ...props }: WhitePawnFiveProps & any) => {
   const mesh = useRef<THREE.Mesh>(null);
   const [isSelected, setSelected] = useState(false);
   const [socketRef, setSocketRef] = useState<SocketIOClient.Socket | null>(null);
@@ -64,4 +64,4 @@ const WhitePawnSix = ({ material, position, geometry, actions, ...props }: White
   );
 };
 
-export default WhitePawnSix;
+export default WhitePawnFive;
