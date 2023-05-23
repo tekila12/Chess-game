@@ -64,7 +64,7 @@ export default function MessageBox() {
         {!chosenUsername ? (
           <>
             <h3 >
-              How people should call you?
+              Enter your username?
             </h3>
             <input
               type="text"
