@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import MessageBox from './MessageBox';
 import { Canvas, } from '@react-three/fiber'
-import { Center, OrbitControls, useProgress } from '@react-three/drei';
+import { Center, OrbitControls, Text3D, useProgress } from '@react-three/drei';
 import dynamic from 'next/dynamic';
 import ChessBoard from './components/ChessBoard';
 
@@ -23,8 +23,9 @@ const Home: React.FunctionComponent = () => {
         </Canvas>
 
  
-  
+  <Text3D> In Progress </Text3D>
       <div style={{ width: "100vw", height: "100vh", background: 'black' }}>
+
     <MessageBox />
       </div> 
          </div> 
