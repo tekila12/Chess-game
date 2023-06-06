@@ -11,7 +11,7 @@ type WhitePawnSixProps = {
   actions: any;
 };
 
-const WhitePawnSix = ({ material, position, geometry, actions, ...props }: WhitePawnSixProps & any) => {
+const WhitePawnEight = ({ material, position, geometry, actions, ...props }: WhitePawnSixProps & any) => {
   const mesh = useRef<THREE.Mesh>(null);
   const [isSelected, setSelected] = useState(false);
   const [socketRef, setSocketRef] = useState<SocketIOClient.Socket | null>(null);
@@ -64,4 +64,4 @@ const WhitePawnSix = ({ material, position, geometry, actions, ...props }: White
   );
 };
 
-export default WhitePawnSix;
+export default WhitePawnEight;
