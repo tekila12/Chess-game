@@ -2,7 +2,6 @@ import React, { Suspense } from 'react';
 import MessageBox from './MessageBox';
 import { Canvas, } from '@react-three/fiber'
 import { Center, OrbitControls, Text3D, useProgress } from '@react-three/drei';
-import dynamic from 'next/dynamic';
 import ChessBoard from './components/ChessBoard';
 
 
